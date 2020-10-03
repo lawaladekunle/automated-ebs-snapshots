@@ -1,3 +1,4 @@
+# Using Python 2.x
 """ Setup script for PyPI """
 import os
 from setuptools import setup
