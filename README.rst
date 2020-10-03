@@ -1,14 +1,10 @@
 automated-ebs-snapshots
 =======================
-.. image:: https://pypip.in/d/automated-ebs-snapshots/badge.png
-    :target: https://pypi.python.org/pypi//automated-ebs-snapshots/
-    :alt: Downloads
-.. image:: https://pypip.in/v/automated-ebs-snapshots/badge.png
-    :target: https://pypi.python.org/pypi/automated-ebs-snapshots/
-    :alt: Latest Version
-.. image:: https://pypip.in/license/automated-ebs-snapshots/badge.png
-    :target: https://pypi.python.org/pypi/automated-ebs-snapshots/
-    :alt: License
+.. image:: https://badge.fury.io/py/automated-ebs-snapshots.svg
+    :target: https://badge.fury.io/py/automated-ebs-snapshots
+.. image:: https://api.codeclimate.com/v1/badges/cbf2a51a48f04b2e0bec/maintainability
+   :target: https://codeclimate.com/github/skymill/automated-ebs-snapshots/maintainability
+   :alt: Maintainability
 
 Automated EBS Snapshots helps you ensure that you have up to date snapshots of
 your EBS volumes.
@@ -24,7 +20,35 @@ Installation
 Authentication configuration
 ----------------------------
 
+IAM Policy
+^^^^^^^^^^^^^^^^^^^^
+
+First you need to create an IAM user and give that user correct Permissions. Below is an example policy:
+::
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "Stmt1453988686666",
+                "Effect": "Allow",
+                "Action": [
+                    "ec2:CreateSnapshot",
+                    "ec2:CreateTags",
+                    "ec2:DeleteTags",
+                    "ec2:DeleteSnapshot",
+                    "ec2:DescribeSnapshots",
+                    "ec2:DescribeVolumes"
+                ],
+                "Resource": [
+                    "*"
+                ]
+            }
+        ]
+    }
+
+
 Automated EBS snapshots can be configured either via command line options or using a configuration file.
+
 
 Command line options
 ^^^^^^^^^^^^^^^^^^^^
@@ -42,7 +66,7 @@ You can use the following command line options to authenticate to AWS.
 Configuration file
 ^^^^^^^^^^^^^^^^^^
 
-Create a configuration file anywhere on you file system.
+Create a configuration file anywhere on you file system. If parameters for access-key-id and `secret-access-key` are not defined, the instance's IAM role will be used instead.
 ::
 
     [general]
@@ -127,6 +151,13 @@ Running ``automated-ebs-snapshots`` manually:
 It will check if there are any volumes with no or too old snapshots. New
 snapshots will be created if needed.
 
+Force run
+^^^^^^^^^
+It's possible to force run the command by using the ``--force-run`` parameter:
+::
+
+    automated-ebs-snapshots --config ~/automated-ebs-snapshots.conf --force-run
+
 Daemon mode
 ^^^^^^^^^^^
 Start the daemon by running
@@ -146,6 +177,22 @@ You can also restart it using
 
 Release notes
 -------------
+
+0.6.1
+^^^^^
+
+- [bugfix] Fix command line argument ``--force-run`` (`#40 <https://github.com/skymill/automated-ebs-snapshots/pull/40>`__). Fixes `#39 <https://github.com/skymill/automated-ebs-snapshots/pull/39>`__
+
+0.6.0
+^^^^^
+
+- [feature] Introducing ``--force-run`` flag (`#27 <https://github.com/skymill/automated-ebs-snapshots/pull/27>`__). Fixes `#23 <https://github.com/skymill/automated-ebs-snapshots/pull/23>`__
+- [bugfix] Fix for timestamp format change (`#37 <https://github.com/skymill/automated-ebs-snapshots/pull/37>`__). Fixes `#36 <https://github.com/skymill/automated-ebs-snapshots/pull/36>`__
+
+0.5.0
+^^^^^
+
+- Add better long EBS ID's (`#33 <https://github.com/skymill/automated-ebs-snapshots/pull/33>`__)
 
 0.4.1
 ^^^^^
